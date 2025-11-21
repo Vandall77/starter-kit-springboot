@@ -2,7 +2,7 @@ spring:
   application:
     name: starter-kit-springboot
   datasource:
-    url: jdbc:postgresql://localhost:5433/belajar_diagram
+    url: jdbc:postgresql://localhost:5432/belajar_diagram
     username: postgres
     password: Sunsetroad$100
   jpa:
