@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/belajar_diagram
     username: postgres
-    password: postgres
+    password: Sunsetroad$100
   jpa:
     hibernate:
       ddl-auto: update
