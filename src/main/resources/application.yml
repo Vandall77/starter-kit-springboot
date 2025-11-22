@@ -26,7 +26,7 @@ spring:
     # Bisa di-override ENV DB_URL_DEV, kalau ga ada pakai default di bawah
     url: ${DB_URL_DEV:jdbc:postgresql://localhost:5432/belajar_diagram}
     username: ${DB_USERNAME_DEV:postgres}
-    password: ${DB_PASSWORD_DEV:postgres}
+    password: ${DB_PASSWORD_DEV:Sunsetroad$100}
     driver-class-name: org.postgresql.Driver
 
   jpa:
