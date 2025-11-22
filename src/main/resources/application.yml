@@ -1,21 +1,113 @@
+# ========== COMMON / BASE (berlaku semua profile) ==========
 spring:
   application:
     name: starter-kit-springboot
-  datasource:
-    url: jdbc:postgresql://localhost:5432/belajar_diagram
-    username: postgres
-    password: Sunsetroad$100
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
+
+  profiles:
+    # kalau ga diset apa-apa, default ke "dev"
+    default: dev
 
 server:
   port: 8080
 
 app:
   jwt:
-    secret: "my-dev-secret-12345678901234567890123456789012"
+    # durasi sama untuk semua profile, bisa diubah per profile kalau mau
     expiration-ms: 3600000
+
+# ========== DEV PROFILE ==========
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    # Bisa di-override ENV DB_URL_DEV, kalau ga ada pakai default di bawah
+    url: ${DB_URL_DEV:jdbc:postgresql://localhost:5432/belajar_diagram}
+    username: ${DB_USERNAME_DEV:postgres}
+    password: ${DB_PASSWORD_DEV:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    # buat dev cukup hardcode / ENV biasa
+    secret: ${JWT_SECRET_DEV:my-dev-secret-12345678901234567890123456789012}
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    com.example.starter: DEBUG
+
+# ========== PROD PROFILE ==========
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    # VPS kamu sekarang → tinggal isi ENV ini
+    url: ${DB_URL_PROD:jdbc:postgresql://localhost:5432/belajar_diagram}
+    username: ${DB_USERNAME_PROD:postgres}
+    password: ${DB_PASSWORD_PROD:Sunsetroad$100}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # prod biasanya ga auto-update schema
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+server:
+  # boleh override port juga via ENV
+  port: ${SERVER_PORT_PROD:8080}
+
+app:
+  jwt:
+    # WAJIB ganti dari ENV di server
+    secret: ${JWT_SECRET_PROD:my-dev-secret-12345678901234567890123456789012}
+
+logging:
+  level:
+    root: INFO
+    com.example.starter: INFO
+  file:
+    name: logs/app.log
+
+# ========== TEST PROFILE ==========
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    # DB khusus test / in-memory, dll (ini contoh Postgres lokal)
+    url: ${DB_URL_TEST:jdbc:postgresql://localhost:5432/belajar_diagram}
+    username: ${DB_USERNAME_TEST}
+    password: ${DB_PASSWORD_TEST}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # test biasanya create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET_TEST}
